@@ -62,12 +62,7 @@ The steps to clean the datasets are the following
 ### **Plots**
 **Univariate Analysis**
 
-<iframe
-  src="/recipes-eda-modeling/assets/nsteps_hist.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
+<iframe src="assets/nsteps_hist.html" width=800 height=600 frameBorder=0></iframe>
 
 This is a histogram showing the Distribution of Number of Steps (n_steps). The distribution is right-skewed, with most recipes having between 5-15 steps, and a few recipes having very high counts. This suggests that most recipes are relatively simple (the biggest bin being [5,10))
 
@@ -75,12 +70,8 @@ This is a histogram showing the Distribution of Number of Steps (n_steps). The d
 
 **Bivariate Analysis**
 
-<iframe
-  src="/recipes-eda-modeling/assets/minstep_box.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
+<iframe src="assets/minstep_box.html" width=800 height=600 frameBorder=0></iframe>
+
 
 This is a box-plot showing the number of steps by preperation time, which was sorted into bins of medium, long, quick, and very long. Quick had the lowest median amount of steps at 7, but surprisingly, "Very Long" was not far off with a median of 12 steps. Overall it is showing that amount of time and n_steps have some sort of positive correlation. 
 
@@ -112,7 +103,7 @@ Using a significance test of 0.05:
 - Dependence on protein: The observed difference in mean protein content was 0.90, with a p-value of 0.166. Since this p-value is greater than 0.05, we fail to reject the null hypothesis, showing that rating missingness likely does not depend on protein content.
 "/recipes-eda-modeling/assets/missbox.html"
 
-<iframe src="/recipes-eda-modeling/assets/miss.html width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/miss.html" width=800 height=600 frameBorder=0></iframe>
 
 
 ## Hypothesis Testing
