@@ -6,7 +6,7 @@ Final Project - DSC 80 @ UCSD
 #### **Overview**
 This project analyzes a comprehensive recipe dataset from Food.com, containing thousands of user-submitted recipes along with nutritional information, preparation details, and user reviews and ratings. In a time where home cooking is increasingly popular as people become more conscious about what they eat and eating out is becoming more of a luxury, understanding what makes a recipe successful is more important than ever.
 
-However, starting out cooking can be a difficult tasks, with so many recipes online and so many levels of complexity. That's why I want to look at how many steps a recipe has and if there's a way to predict that. 
+However, starting out cooking can be a difficult task, with so many recipes online and so many levels of complexity. That's why I want to look at how many steps a recipe has and if there's a way to predict that. 
 
 **Research Question & Goal**:
 
@@ -52,7 +52,7 @@ The steps to clean the datasets are the following
 2. Interactions where there was no rating was given a 0, which heavily skews with finding different summary statistics and overall distribution, so I had to first replace that with NA. 
 3. Since multiple people have different ratings to the same recipes, I had to groupby each recipe and create a column that shows the average rating of a recipe. Afterwards, to make the nutrition_list more usable, I created a individual column for each nutrition (calories, sodium, etc.) and had their corresponding nutriton values for each column. 
 4. I removed rows where there are extreme outliers that don't make sense (e.g. a recipe that takes 1M+ minutes) as these recipes could be submitted by anyone and could be inaccurate.
-5. I then dropped columns that would be uncessary in exploring the data (review, user_id, recipe_id, date).
+5. I then dropped columns that would be unnecessary in exploring the data (review, user_id, recipe_id, date).
 
 |    | name                                 |     id |   minutes |   contributor_id | submitted   | tags                                                                                                                                                                                                                        |   n_steps | steps                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | description                                                                                                                                                                                                                                                          | ingredients                                                                                                                                                                    |   n_ingredients |   rating |   avg_rating |   calories |   total fat |   sugar |   sodium |   protein |   saturated fat |   carbohydrates |
 |---:|:-------------------------------------|-------:|----------:|-----------------:|:------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------:|---------:|-------------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
@@ -78,6 +78,8 @@ This is a box-plot showing the number of steps by preperation time, which was so
 
 
 **Interesting Aggregate**
+
+
 | Time              |   n_steps_mean |   n_steps_median |   n_steps_std |   recipe_count |   avg_minutes |
 |:------------------|---------------:|-----------------:|--------------:|---------------:|--------------:|
 | Very Quick (0-15) |        5.53043 |                5 |       3.78584 |          15544 |       9.32791 |
@@ -101,7 +103,6 @@ Using a significance test of 0.05:
 - Dependence on n_steps: The observed difference in mean n_steps between recipes with missing vs. non-missing ratings was 1.37, with a p-value of 0.0. Since the p-value is below 0.05, we reject the null hypothesis and conclude that rating missingness likely does depends on the number of steps.
 - Dependence on minutes: The observed difference in mean cooking time was 11.11 minutes, with a p-value of 0.0. We again reject the null hypothesis, suggesting that rating missingness depends on preparation time.
 - Dependence on protein: The observed difference in mean protein content was 0.90, with a p-value of 0.166. Since this p-value is greater than 0.05, we fail to reject the null hypothesis, showing that rating missingness likely does not depend on protein content.
-"/recipes-eda-modeling/assets/missbox.html"
 
 <iframe src="assets/miss.html" width=400 height=300 frameBorder=0></iframe>
 
@@ -122,7 +123,7 @@ Observed Statistic: 0.1162 (high-rated recipes have slightly more steps on avera
 P-value: 0.02 (<0.05)
 
 
-**Conclusion:** We reject the null hypothesis that any observed difference is due to chance and there is likely a difference in ratings between higher and lower rated recipes. There is statistically significant evidence that the number of steps differs between highly rated recipes and lower rated recipes, but the difference is quite small. 
+**Conclusion:** We reject the null hypothesis that any observed difference is due to chance and there is likely a difference in number of steps between higher rated and lower rated recipes. There is statistically significant evidence that the number of steps differs between highly rated recipes and lower rated recipes, but the difference is quite small. 
 
 ## Prediction Problem
 The prediction is the estimated number of steps (n_steps) needed to complete a recipe, based on features such as preparation time, number of ingredients, and nutritional information.
@@ -131,6 +132,8 @@ I will be using an Regression model as we're predicting a numerical, continuous 
 n_steps is our response variable. 
 
 I chose this because it can show the complexity of a recipe. Recipes with more steps typically require more detailed preparation and effort, making it a meaningful outcome to predict. 
+
+At the time of prediction, there is an assumption that all recipe information is known as they are not directly related to n_steps. Also, if it's a completely new recipe, it will be difficult to use avg_ratings.
 
 Also, n_steps is a well-defined variable that has good variability. I used the R² metric to evaluate. R² measures the proportion of variance in the response variable that is explained by the model. I chose R^2 over other metrics such as RMSE as it is more readable, and has a scale of 0-1 to tell how accurate a model is. While MSE measures prediction error in more ambigious values, R² allows us to understand improvements that are relatives to the different models. 
 
@@ -144,7 +147,7 @@ I trained a linear regression model to predict the number of steps (n_steps) req
 **Target**
 - n-steps _(quantitative, discrete)_: number of steps in a recipe
 
-I choose those two features for my baseline as I could assume they have positive correlation to n_steps. I used StandardSclar to the input features due to minutes and n_ingredients being from very different scales, preventing that from influencing the model. 
+I choose those two features for my baseline as I could assume they have positive correlation to n_steps. I used StandardScaler to the input features due to minutes and n_ingredients being from very different scales. Therefore, I want to normalize those features before fitting.
 
 **Model Performance**
 - Train R²: 0.19772278188688763
@@ -156,14 +159,14 @@ Our baseline model has moderate-low predictive performance which shows that thos
 ## Final Model 
 **Features Added**
 - Nutrition Values (calories, total fat, protein, carbohydrates; _quantitative, continuous_): These nutrition features help capture the complexity of a recipe. Recipes with higher nutrition values could indicate the size of the recipe which may correlate with the number of steps.
-- desc_length _(quantitative, continuous)_: This measures the length of the recipe description. Longer descriptions may mean more complex recipes, which could lead to a higher number of steps.
+- desc_length _(quantitative, discrete)_: This measures the length of the recipe description. Longer descriptions may mean more complex recipes, which could lead to a higher number of steps.
 - minutes_per_ingredient _(quantitative, continuous)_: This captures how much time is spent per ingredient. Recipes with more time per ingredient may involve more detailed preparation that requires more steps.
 - ingredients_per_minute _(quantitative, continuous)_: This shows how many ingredients are being used per minute. The more ingredients being used per minute could mean that there are less steps (e.g. throwing in a bunch of seasoning, high ingredients low time)
 - fat_protein_ratio _(quantitative, continuous)_: This shows a balance between the nutrients and could potentially reflect the type of dish that has less/more ingredients. (e.g. cake which has high fat low protein has more steps than grilled chicken which has low fat high protein and less steps)
 - avg_rating _(quantitative, continuous)_: This captures what people think about this recipe and recipes that are more difficult (more steps) or on the contrary be better tasting (more steps) could determine ratings.
 
 **Modeling Algorithm**
-- I used a decision tree regressor as y final model so it can capture interactions between features and be more in depth than a linear regression. Before modeling, I used a pipeline to process the numbers with QuantileTransformer and StandardScaler. QuantileTransformer makes the distribution normal which helps with the large amount of outliers in our dataset.
+- I used a decision tree regressor as my final model so it can capture feature interactions and also non linear relationships between features. Before modeling, I used a pipeline to process the numbers with QuantileTransformer and StandardScaler. QuantileTransformer makes the distribution normal which helps with the large amount of outliers in our dataset.
 
 **Hyperparameters**
 - I used GridSearchCV with 3 cross validations to prevent overfitting to the validation data. The hyperparameters I chose included max_depth which controlled the complexity of the tree, preventing it from overfitting (max depth). I also used min_sample_split also to prevent overfitting by continously splitting. 
@@ -173,7 +176,7 @@ Our baseline model has moderate-low predictive performance which shows that thos
 - Train R²: 0.31802960305681127
 - Test R²: 0.28784107493460065
 
-For both the testing and training set, the final model performed around 0.1~ better which is around 10% better in R² (ability to observe variance). This shows that there was significant improvement in our model, but definently has space for more. Again, the training and test R² performed around the same, showing that it is still not overfitting.
+For both the testing and training set, the final model performed around 0.1~ better which is around 10% better in R² (ability to observe variance). This shows that there was significant improvement in our model, but definitely has space for more. Again, the training and test R² performed around the same, showing that it is still not overfitting.
 
 ## Fairness Analysis
 **Group X:** recipes with average rating > 4.5
