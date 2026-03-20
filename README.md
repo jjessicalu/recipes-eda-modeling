@@ -8,18 +8,21 @@ This project analyzes a comprehensive recipe dataset from Food.com, containing t
 
 However, starting out cooking can be a difficult tasks, with so many recipes online and so many levels of complexity. That's why I want to look at how many steps a recipe has and if there's a way to predict that. 
 
-**Research Question & Goal**
+**Research Question & Goal**:
+
 Can we predict the complexity of a recipe (measured by number of steps) based on its characteristics such as preparation time, ingredients, and nutritional content? 
 
-**Why:** Understanding what factors contribute to recipe complexity can help home cooks estimate the effort required before starting a recipe and help recipe creators better communicate the difficulty level of their dishes.
+**Why:** 
 
-#### **Dataset Overview**
+Understanding what factors contribute to recipe complexity can help home cooks estimate the effort required before starting a recipe and help recipe creators better communicate the difficulty level of their dishes.
+
+### **Dataset Overview**
 
 Interactions dataset: 731,927 rows for every user interaction and 5 columns features
 
 Raw recipes dataset: 83,782 rows for each unique recipe and 12 columns containing recipe information
 
-#### Relevant Columns from Recipes Dataset
+### Relevant Columns from Recipes Dataset
 
 | Column | Description |
 |--------|-------------|
@@ -56,26 +59,27 @@ The steps to clean the datasets are the following
 |  0 | 1 brownies in the world    best ever | 333281 |        40 |           985201 | 2008-10-27  | ['60-minutes-or-less', 'time-to-make', 'course', 'main-ingredient', 'preparation', 'for-large-groups', 'desserts', 'lunch', 'snacks', 'cookies-and-brownies', 'chocolate', 'bar-cookies', 'brownies', 'number-of-servings'] |        10 | ['heat the oven to 350f and arrange the rack in the middle', 'line an 8-by-8-inch glass baking dish with aluminum foil', 'combine chocolate and butter in a medium saucepan and cook over medium-low heat , stirring frequently , until evenly melted', 'remove from heat and let cool to room temperature', 'combine eggs , sugar , cocoa powder , vanilla extract , espresso , and salt in a large bowl and briefly stir until just evenly incorporated', 'add cooled chocolate and mix until uniform in color', 'add flour and stir until just incorporated', 'transfer batter to the prepared baking dish', 'bake until a tester inserted in the center of the brownies comes out clean , about 25 to 30 minutes', 'remove from the oven and cool completely before cutting']                                                  | these are the most; chocolatey, moist, rich, dense, fudgy, delicious brownies that you'll ever make.....sereiously! there's no doubt that these will be your fav brownies ever for you can add things to them or make them plain.....either way they're pure heaven! | ['bittersweet chocolate', 'unsalted butter', 'eggs', 'granulated sugar', 'unsweetened cocoa powder', 'vanilla extract', 'brewed espresso', 'kosher salt', 'all-purpose flour'] |               9 |        4 |            4 |      138.4 |          10 |      50 |        3 |         3 |              19 |               6 |
 |  1 | 1 in canada chocolate chip cookies   | 453467 |        45 |          1848091 | 2011-04-11  | ['60-minutes-or-less', 'time-to-make', 'cuisine', 'preparation', 'north-american', 'for-large-groups', 'canadian', 'british-columbian', 'number-of-servings']                                                               |        12 | ['pre-heat oven the 350 degrees f', 'in a mixing bowl , sift together the flours and baking powder', 'set aside', 'in another mixing bowl , blend together the sugars , margarine , and salt until light and fluffy', 'add the eggs , water , and vanilla to the margarine / sugar mixture and mix together until well combined', 'add in the flour mixture to the wet ingredients and blend until combined', 'scrape down the sides of the bowl and add the chocolate chips', 'mix until combined', 'scrape down the sides to the bowl again', 'using an ice cream scoop , scoop evenly rounded balls of dough and place of cookie sheet about 1 - 2 inches apart to allow for spreading during baking', 'bake for 10 - 15 minutes or until golden brown on the outside and soft & chewy in the center', 'serve hot and enjoy !'] | this is the recipe that we use at my school cafeteria for chocolate chip cookies. they must be the best chocolate chip cookies i have ever had! if you don't have margarine or don't like it, then just use butter (softened) instead.                               | ['white sugar', 'brown sugar', 'salt', 'margarine', 'eggs', 'vanilla', 'water', 'all-purpose flour', 'whole wheat flour', 'baking soda', 'chocolate chips']                    |              11 |        5 |            5 |      595.1 |          46 |     211 |       22 |        13 |              51 |              26 |
 
-#### **Plots**
+### **Plots**
 **Univariate Analysis**
 <iframe
-  src="assets/nsteps_hist.html"
+  src="/recipes-eda-modeling/assets/nsteps_hist.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
 This is a histogram showing the Distribution of Number of Steps (n_steps). The distribution is right-skewed, with most recipes having between 5-15 steps, and a few recipes having very high counts. This suggests that most recipes are relatively simple (the biggest bin being [5,10))
-
+---
 
 **Bivariate Analysis**
 <iframe
-  src="assets/minstep_box.html"
+  src="/recipes-eda-modeling/assets/minstep_box.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
 This is a box-plot showing the number of steps by preperation time, which was sorted into bins of medium, long, quick, and very long. Quick had the lowest median amount of steps at 7, but surprisingly, "Very Long" was not far off with a median of 12 steps. Overall it is showing that amount of time and n_steps have some sort of positive correlation. 
 
+---
 
 **Interesting Aggregate**
 | Time              |   n_steps_mean |   n_steps_median |   n_steps_std |   recipe_count |   avg_minutes |
@@ -101,7 +105,8 @@ Using a significance test of 0.05:
 - Dependence on n_steps: The observed difference in mean n_steps between recipes with missing vs. non-missing ratings was 1.37, with a p-value of 0.0. Since the p-value is below 0.05, we reject the null hypothesis and conclude that rating missingness likely does depends on the number of steps.
 - Dependence on minutes: The observed difference in mean cooking time was 11.11 minutes, with a p-value of 0.0. We again reject the null hypothesis, suggesting that rating missingness depends on preparation time.
 - Dependence on protein: The observed difference in mean protein content was 0.90, with a p-value of 0.166. Since this p-value is greater than 0.05, we fail to reject the null hypothesis, showing that rating missingness likely does not depend on protein content.
-<iframe src="assets/miss.html" width="800" height="600" frameborder="0"></iframe>
+"/recipes-eda-modeling/assets/missbox.html"
+<iframe src="/recipes-eda-modeling/assets/miss.html width="800" height="600" frameborder="0"></iframe>
 
 
 ## Hypothesis Testing
