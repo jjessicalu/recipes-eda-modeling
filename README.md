@@ -60,8 +60,8 @@ The steps to clean the datasets are the following
 **Univariate Analysis**
 <iframe
   src="assets/nsteps_hist.html"
-  width="600"
-  height="400"
+  width="800"
+  height="600"
   frameborder="0"
 ></iframe>
 This is a histogram showing the Distribution of Number of Steps (n_steps). The distribution is right-skewed, with most recipes having between 5-15 steps, and a few recipes having very high counts. This suggests that most recipes are relatively simple (the biggest bin being [5,10))
@@ -70,8 +70,8 @@ This is a histogram showing the Distribution of Number of Steps (n_steps). The d
 **Bivariate Analysis**
 <iframe
   src="assets/minstep_box.html"
-  width="600"
-  height="400"
+  width="800"
+  height="600"
   frameborder="0"
 ></iframe>
 This is a box-plot showing the number of steps by preperation time, which was sorted into bins of medium, long, quick, and very long. Quick had the lowest median amount of steps at 7, but surprisingly, "Very Long" was not far off with a median of 12 steps. Overall it is showing that amount of time and n_steps have some sort of positive correlation. 
@@ -101,12 +101,8 @@ Using a significance test of 0.05:
 - Dependence on n_steps: The observed difference in mean n_steps between recipes with missing vs. non-missing ratings was 1.37, with a p-value of 0.0. Since the p-value is below 0.05, we reject the null hypothesis and conclude that rating missingness likely does depends on the number of steps.
 - Dependence on minutes: The observed difference in mean cooking time was 11.11 minutes, with a p-value of 0.0. We again reject the null hypothesis, suggesting that rating missingness depends on preparation time.
 - Dependence on protein: The observed difference in mean protein content was 0.90, with a p-value of 0.166. Since this p-value is greater than 0.05, we fail to reject the null hypothesis, showing that rating missingness likely does not depend on protein content.
-<iframe
-  src="assets/miss.html"
-  width="600"
-  height="400"
-  frameborder="0"
-></iframe>
+<iframe src="assets/miss.html" width="800" height="600" frameborder="0"></iframe>
+
 
 ## Hypothesis Testing
 **Null Hypothesis:** The mean number of steps is the same for recipes with average ratings above 4.5 and those with average ratings at or below 4.5. Any observed difference is due to random chance.
@@ -178,16 +174,16 @@ Our baseline model has moderate-low predictive performance which shows that thos
 For both the testing and training set, the final model performed around 0.1~ better which is around 10% better in R² (ability to observe variance). This shows that there was significant improvement in our model, but definently has space for more. Again, the training and test R² performed around the same, showing that it is still not overfitting.
 
 ## Fairness Analysis
-Group X: recipes with average rating > 4.5
-Group Y: recipes with average rating ≤ 4.5
+**Group X:** recipes with average rating > 4.5
+**Group Y:** recipes with average rating ≤ 4.5
 
-Null Hypothesis:
+**Null Hypothesis:**
 Our model is fair. Its R² for highly rated recipes and lower-rated recipes is roughly the same, and any observed differences are due to random chance.
 
-Alternative Hypothesis:
+**Alternative Hypothesis:**
 Our model is unfair. Its R² differs between highly rated recipes and lower-rated recipes.
 
-Test Statistic: R²(high rated) - R²(low rated)
+**Test Statistic:** R²(high rated) - R²(low rated)
 Significance Level: 0.05
 Observed Statistic: 0.014 (high-rated recipes have slightly more steps on average)
 P-value: 0.351 (>0.05)
